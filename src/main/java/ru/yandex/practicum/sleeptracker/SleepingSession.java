@@ -27,7 +27,7 @@ public class SleepingSession {
     public String getQuality() {
         return quality;
     }
-    
+
     public long getDurationMinutes() {
         return duration.toMinutes();
     }
