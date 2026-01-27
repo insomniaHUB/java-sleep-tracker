@@ -19,7 +19,7 @@ public class SleepTrackerAppTest {
 
     @BeforeAll
     static void fillSessionList() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src\\main\\resources\\sleep_log.txt", StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("sleep_log.txt", StandardCharsets.UTF_8))) {
             reader.lines()
                     .map(SleepTrackerApp::addSleepingSessionToList)
                     .forEach(sessions::add);
