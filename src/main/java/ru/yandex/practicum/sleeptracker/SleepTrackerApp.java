@@ -22,8 +22,8 @@ public class SleepTrackerApp {
             pathToLog = args[0];
             try (BufferedReader reader = new BufferedReader(new FileReader(pathToLog, StandardCharsets.UTF_8))) {
                 reader.lines()
-                        .map(SleepTrackerApp :: addSleepingSessionToList)
-                        .forEach(sessionList :: add);
+                        .map(SleepTrackerApp::addSleepingSessionToList)
+                        .forEach(sessionList::add);
 
                 Stream.of(
                         new TotalSession(),
@@ -37,7 +37,7 @@ public class SleepTrackerApp {
 
                 analysisFunctions.stream()
                         .map(function -> function.apply(sessionList))
-                        .forEach(System.out :: println);
+                        .forEach(System.out::println);
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
