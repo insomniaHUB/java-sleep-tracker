@@ -16,8 +16,16 @@ public class SleepingSession {
         this.duration = Duration.between(startTime, endTime);
     }
 
-    public LocalDateTime getStartTime() { return startTime; }
-    public LocalDateTime getEndTime() { return endTime; }
-    public String getQuality() { return quality; }
-    public long getDurationMinutes() { return duration.toMinutes(); }
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+    public String getQuality() {
+        return quality;
+    }
+    public long getDurationMinutes() {
+        return duration.toMinutes();
+    }
 }
