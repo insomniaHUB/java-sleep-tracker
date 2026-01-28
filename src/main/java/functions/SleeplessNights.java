@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class SleeplessNights implements Function<List<SleepingSession>, SleepAnalysisResult<Long>> {
 
-    private final int END_OF_NIGHT_TIME = 6;
+    private static final int END_OF_NIGHT_TIME = 6;
 
     @Override
     public SleepAnalysisResult<Long> apply(List<SleepingSession> sessions) {
