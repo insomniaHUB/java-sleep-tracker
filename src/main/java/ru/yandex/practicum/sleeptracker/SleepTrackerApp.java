@@ -1,5 +1,7 @@
 package ru.yandex.practicum.sleeptracker;
 
+import functions.*;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.util.stream.Stream;
 public class SleepTrackerApp {
 
     static List<SleepingSession> sessionList = new ArrayList<>();
-    private static final List<Function<List<SleepingSession>, String>> analysisFunctions = new ArrayList<>();
+    private static final List<Function<List<SleepingSession>, ? extends SleepAnalysisResult<?>>> analysisFunctions = new ArrayList<>();
 
     public static void main(String[] args) {
         String pathToLog;
@@ -37,6 +39,7 @@ public class SleepTrackerApp {
 
                 analysisFunctions.stream()
                         .map(function -> function.apply(sessionList))
+                        .map(SleepAnalysisResult::getStr)
                         .forEach(System.out::println);
 
             } catch (IOException e) {

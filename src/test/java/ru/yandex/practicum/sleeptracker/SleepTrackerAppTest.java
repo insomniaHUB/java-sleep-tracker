@@ -1,5 +1,6 @@
 package ru.yandex.practicum.sleeptracker;
 
+import functions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,45 +31,92 @@ public class SleepTrackerAppTest {
 
     @Test
     void totalSessionsTest() {
-        Assertions.assertEquals("Общее количество сессий сна: 0", new TotalSession().apply(sessionList));
-        Assertions.assertEquals("Общее количество сессий сна: 13", new TotalSession().apply(sessions));
+        Assertions.assertEquals(0, new TotalSession().apply(sessionList).getValue());
+        Assertions.assertEquals(13, new TotalSession().apply(sessions).getValue());
     }
 
     @Test
     void shortestSessionTest() {
-        Assertions.assertEquals("Самая короткая сессия сна длилась: 45 минут", new ShortestSession().apply(sessions));
-        Assertions.assertEquals("Самая короткая сессия сна длилась: 0 минут", new ShortestSession().apply(sessionList));
+        Assertions.assertEquals(45, new ShortestSession().apply(sessions).getValue());
+        Assertions.assertEquals(0, new ShortestSession().apply(sessionList).getValue());
     }
 
     @Test
     void longestSessionTest() {
-        Assertions.assertEquals("Самая длинная сессия сна длилась: 500 минут", new LongestSession().apply(sessions));
-        Assertions.assertEquals("Самая длинная сессия сна длилась: 0 минут", new LongestSession().apply(sessionList));
+        Assertions.assertEquals(500, new LongestSession().apply(sessions).getValue());
+        Assertions.assertEquals(0, new LongestSession().apply(sessionList).getValue());
     }
 
     @Test
     void averageTimeSessionTest() {
-        Assertions.assertEquals("В среднем сессии сна длятся: 345 минут", new AverageTimeSession().apply(sessions));
-        Assertions.assertEquals("В среднем сессии сна длятся: 0 минут", new AverageTimeSession().apply(sessionList));
+        Assertions.assertEquals(345, new AverageTimeSession().apply(sessions).getValue());
+        Assertions.assertEquals(0, new AverageTimeSession().apply(sessionList).getValue());
     }
 
     @Test
     void badSleepSessionTest() {
-        Assertions.assertEquals("Количество сессий с плохим качеством сна: 2", new BadSleepSession().apply(sessions));
-        Assertions.assertEquals("Количество сессий с плохим качеством сна: 0", new BadSleepSession().apply(sessionList));
+        Assertions.assertEquals(2, new BadSleepSession().apply(sessions).getValue());
+        Assertions.assertEquals(0, new BadSleepSession().apply(sessionList).getValue());
     }
 
     @Test
-    void sleeplessNightTest() {
+    void sleeplessNightTotalTest() {
+        Assertions.assertEquals(20, new SleeplessNights().apply(sessions).getValue());
+        Assertions.assertNull(new SleeplessNights().apply(sessionList).getValue());
+    }
+
+    @Test
+    void sleeplessNightAnotherMonthTest() {
+        List<SleepingSession> anotherMonthList = new ArrayList<>();
+
+        SleepingSession goodSession = new SleepingSession(
+                LocalDateTime.of(2026, 1, 10, 23, 0),
+                LocalDateTime.of(2026, 1, 11, 3, 0),
+                "BAD"
+        );
+
+        SleepingSession oneDaySession = new SleepingSession(
+                LocalDateTime.of(2026, 1, 10, 2, 0),
+                LocalDateTime.of(2026, 1, 10, 3, 0),
+                "BAD"
+        );
+
+        SleepingSession anotherMonth = new SleepingSession(
+                LocalDateTime.of(2026, 2, 10, 23, 0),
+                LocalDateTime.of(2026, 2, 11, 3, 0),
+                "BAD"
+        );
+
+        anotherMonthList.add(oneDaySession);
+        anotherMonthList.add(goodSession);
+        anotherMonthList.add(anotherMonth);
+
+        Assertions.assertEquals(29, new SleeplessNights().apply(anotherMonthList).getValue());
+    }
+
+    @Test
+    void sleeplessNightGoodTest() {
         List<SleepingSession> goodSessionList = new ArrayList<>();
-        SleepingSession goodSession = new SleepingSession(LocalDateTime.of(2026, 1, 10, 23, 0),
-                LocalDateTime.of(2026, 1, 11, 3, 0), "BAD");
+        List<SleepingSession> oneDaySessionList = new ArrayList<>();
+
+        SleepingSession goodSession = new SleepingSession(
+                LocalDateTime.of(2026, 1, 10, 23, 0),
+                LocalDateTime.of(2026, 1, 11, 3, 0),
+                "BAD"
+        );
+
+        SleepingSession oneDaySession = new SleepingSession(
+                LocalDateTime.of(2026, 1, 10, 2, 0),
+                LocalDateTime.of(2026, 1, 10, 3, 0),
+                "BAD"
+        );
+
+
         goodSessionList.add(goodSession);
+        oneDaySessionList.add(oneDaySession);
 
-
-        Assertions.assertEquals("Бессонных ночей: 20", new SleeplessNights().apply(sessions));
-        Assertions.assertEquals("Бессонных ночей: 0", new SleeplessNights().apply(goodSessionList));
-        Assertions.assertEquals("Нет зарегистрированных сессий", new SleeplessNights().apply(sessionList));
+        Assertions.assertEquals(0, new SleeplessNights().apply(goodSessionList).getValue());
+        Assertions.assertEquals(0, new SleeplessNights().apply(oneDaySessionList).getValue());
 
     }
 
@@ -82,11 +130,14 @@ public class SleepTrackerAppTest {
         SleepingSession larkSession = new SleepingSession(LocalDateTime.of(2026, 1, 10, 21, 30),
                 LocalDateTime.of(2026, 1, 11, 6, 0), "NORMAL");
         larkSessionList.add(larkSession);
+        List<SleepingSession> shouldBePigeonSessionList = new ArrayList<>();
+        shouldBePigeonSessionList.add(owlSession);
+        shouldBePigeonSessionList.add(larkSession);
 
-        Assertions.assertEquals("Ваш хронотип: Голубь", new UserType().apply(sessions));
-        Assertions.assertEquals("Ваш хронотип: Сова", new UserType().apply(owlSessionList));
-        Assertions.assertEquals("Ваш хронотип: Жаворонок", new UserType().apply(larkSessionList));
-        Assertions.assertEquals("Нет зарегистрированных сессий", new UserType().apply(sessionList));
+        Assertions.assertEquals("Голубь", new UserType().apply(sessions).getValue());
+        Assertions.assertEquals("Голубь", new UserType().apply(shouldBePigeonSessionList).getValue());
+        Assertions.assertEquals("Жаворонок", new UserType().apply(larkSessionList).getValue());
+        Assertions.assertEquals("Сова", new UserType().apply(owlSessionList).getValue());
+        Assertions.assertNull(new UserType().apply(sessionList).getValue());
     }
-
 }

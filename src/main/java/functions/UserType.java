@@ -1,16 +1,19 @@
-package ru.yandex.practicum.sleeptracker;
+package functions;
+
+import ru.yandex.practicum.sleeptracker.SleepAnalysisResult;
+import ru.yandex.practicum.sleeptracker.SleepingSession;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class UserType implements Function<List<SleepingSession>, String> {
+public class UserType implements Function<List<SleepingSession>, SleepAnalysisResult<String>> {
     @Override
-    public String apply(List<SleepingSession> sessions) {
+    public SleepAnalysisResult<String> apply(List<SleepingSession> sessions) {
 
         if (sessions.isEmpty()) {
-            return "Нет зарегистрированных сессий";
+            return new SleepAnalysisResult<>("Нет зарегистрированных сессий", null);
         }
 
         List<SleepingSession> onlyNightSessions = sessions.stream()
@@ -30,11 +33,11 @@ public class UserType implements Function<List<SleepingSession>, String> {
         long isPigeon = onlyNightSessions.size() - (isOwl + isLark);
 
         if (isOwl > isLark && isOwl > isPigeon) {
-            return "Ваш хронотип: Сова";
+            return new SleepAnalysisResult<>("Ваш хронотип: Сова", "Сова");
         } else if (isLark > isOwl && isLark > isPigeon) {
-            return "Ваш хронотип: Жаворонок";
+            return new SleepAnalysisResult<>("Ваш хронотип: Жаворонок", "Жаворонок");
         } else {
-            return "Ваш хронотип: Голубь";
+            return new SleepAnalysisResult<>("Ваш хронотип: Голубь", "Голубь");
         }
 
     }
